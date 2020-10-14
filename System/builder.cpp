@@ -78,79 +78,23 @@ QList<Command*> *Builder::getProgrammList() const
 void Builder::setupCommandList()
 {
     commandList = new QMap<QString, COMINFO>();
+
     COMINFO tmpInfo;
+    QStringList list;
+    list<<"NOP"<<"MOV1"<<"MOV2"<<"MOV3"<<"MOV4"<<"MOV5"<<"ADD1"<<"ADD2"
+        <<"ADD3"<<"SUB1"<<"SUB2"<<"MUX"<<"AND1"<<"AND2"<<"OR1"<<"OR2"
+        <<"JP"<<"JZ"<<"JN"<<"JMP";
 
-    tmpInfo.num = 0;
-    tmpInfo.opCnt = 0;
-    commandList->insert("NOP", tmpInfo);
+    for(int i=0; i<20; i++)
+    {
+        tmpInfo.num = i;
 
-    tmpInfo.num = 1;
-    tmpInfo.opCnt = 2;
-    commandList->insert("MOV1", tmpInfo);
+        if(i!=0) tmpInfo.opCnt = 2;
+        else if(i>15 && i<20) tmpInfo.opCnt = 1;
+        else tmpInfo.opCnt = 0;
 
-    tmpInfo.num = 2;
-    tmpInfo.opCnt = 2;
-    commandList->insert("MOV2", tmpInfo);
-
-    tmpInfo.num = 3;
-    tmpInfo.opCnt = 2;
-    commandList->insert("MOV3", tmpInfo);
-
-    tmpInfo.num = 4;
-    tmpInfo.opCnt = 2;
-    commandList->insert("MOV4", tmpInfo);
-
-    tmpInfo.num = 5;
-    tmpInfo.opCnt = 2;
-    commandList->insert("MOV5", tmpInfo);
-
-    tmpInfo.num = 6;
-    tmpInfo.opCnt = 2;
-    commandList->insert("ADD1", tmpInfo);
-
-    tmpInfo.num = 7;
-    tmpInfo.opCnt = 2;
-    commandList->insert("ADD2", tmpInfo);
-
-    tmpInfo.num = 8;
-    tmpInfo.opCnt = 2;
-    commandList->insert("SUB1", tmpInfo);
-
-    tmpInfo.num = 9;
-    tmpInfo.opCnt = 2;
-    commandList->insert("SUB2", tmpInfo);
-
-    tmpInfo.num = 10;
-    tmpInfo.opCnt = 2;
-    commandList->insert("AND1", tmpInfo);
-
-    tmpInfo.num = 11;
-    tmpInfo.opCnt = 2;
-    commandList->insert("AND2", tmpInfo);
-
-    tmpInfo.num = 12;
-    tmpInfo.opCnt = 2;
-    commandList->insert("OR1", tmpInfo);
-
-    tmpInfo.num = 13;
-    tmpInfo.opCnt = 2;
-    commandList->insert("OR2", tmpInfo);
-
-    tmpInfo.num = 14;
-    tmpInfo.opCnt = 1;
-    commandList->insert("JP", tmpInfo);
-
-    tmpInfo.num = 15;
-    tmpInfo.opCnt = 1;
-    commandList->insert("JZ", tmpInfo);
-
-    tmpInfo.num = 16;
-    tmpInfo.opCnt = 1;
-    commandList->insert("JN", tmpInfo);
-
-    tmpInfo.num = 17;
-    tmpInfo.opCnt = 1;
-    commandList->insert("JMP", tmpInfo);
+        commandList->insert(list.at(i), tmpInfo);
+    }
 }
 
 int Builder::parse(const QStringList &words)
