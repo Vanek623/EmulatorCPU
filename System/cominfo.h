@@ -1,9 +1,8 @@
-#ifndef COMINFO_H
-#define COMINFO_H
+#pragma once
+
+#include "comnames.h"
 
 struct COMINFO{
-    int num; //operation num
+    ComNames name; //operation num
     int opCnt;  //operands count
 };
-
-#endif // COMINFO_H

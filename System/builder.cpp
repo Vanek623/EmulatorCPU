@@ -81,16 +81,22 @@ void Builder::setupCommandList()
 
     COMINFO tmpInfo;
     QStringList list;
+
     list<<"NOP"<<"MOV1"<<"MOV2"<<"MOV3"<<"MOV4"<<"MOV5"<<"ADD1"<<"ADD2"
         <<"ADD3"<<"SUB1"<<"SUB2"<<"MUX"<<"AND1"<<"AND2"<<"OR1"<<"OR2"
         <<"JP"<<"JZ"<<"JN"<<"JMP";
 
-    for(int i=0; i<20; i++)
-    {
-        tmpInfo.num = i;
+    QList<ComNames> opNames;
 
-        if(i!=0) tmpInfo.opCnt = 2;
-        else if(i>15 && i<20) tmpInfo.opCnt = 1;
+    opNames <<NOP<<MOV1<<MOV2<<MOV3<<MOV4<<MOV5<<ADD1<<ADD2<<ADD3
+            <<SUB1<<SUB2<<MUX<<AND1<<AND2<<OR1<<OR2<<JP<<JZ<<JN<<JMP;
+
+    for(int i=0; i<list.size(); i++)
+    {
+        tmpInfo.name = opNames.at(i);
+
+        if(tmpInfo.name>=JP && tmpInfo.name<=JMP || tmpInfo.name == ADD3 ) tmpInfo.opCnt = 1;
+        else if(i!=0) tmpInfo.opCnt = 2;
         else tmpInfo.opCnt = 0;
 
         commandList->insert(list.at(i), tmpInfo);
@@ -103,15 +109,12 @@ int Builder::parse(const QStringList &words)
     QStringList::const_iterator it;
     int line = 0;
 
-    quint16 op1, op2;
-    ComNames name;
-
     for(it = words.begin(); it != words.end(); ++it){
+        quint16 op1, op2;
+
         if(commandList->contains(*it))
         {
             COMINFO curInfo = commandList->value(*it);
-
-            name = static_cast<ComNames>(curInfo.num);
 
             if(curInfo.opCnt >= 1)
             {
@@ -120,7 +123,7 @@ int Builder::parse(const QStringList &words)
                 if(it + 1 != words.end())
                 {
                     //Обработка операнда связанного с меткой
-                    if(name >= JP && name <= JMP)
+                    if(curInfo.name >= JP && curInfo.name <= JMP)
                     {
                         if(marks->contains(*(++it))) op1 = marks->value(*it);
                         else return line;
@@ -153,7 +156,7 @@ int Builder::parse(const QStringList &words)
             }
             else op1 = op2 = 0;
 
-            program->append(new Command(name,op1,op2));
+            program->append(new Command(curInfo.name,op1,op2));
         }
         else return line;
 

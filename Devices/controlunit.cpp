@@ -90,11 +90,15 @@ bool ControlUnit::Work(){
             break;
         case ADD1:
         case ADD2:
+        case ADD3:
             addOp();
             break;
         case SUB1:
         case SUB2:
             subOp();
+            break;
+        case MUX:
+            muxOp();
             break;
         case AND1:
         case AND2:
@@ -161,12 +165,19 @@ void ControlUnit::movOp(){
 }
 
 void ControlUnit::addOp(){
+    quint32 a, result;
     switch (curCom->getName()) {
     case ADD1:
-            regs[0].write(alu.addOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read()));
+        regs[0].write(alu.addOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read(), false));
         break;
     case ADD2:
-           regs[0].write( alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2()) );
+        regs[0].write( alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2(), false) );
+        break;
+    case ADD3:
+        a = (regs.at(1).read() << 16) + regs.at(2).read();
+        result = alu.addOp( a, regs.at(curCom->getOp1()).read(), true);
+        regs[0].write(result >> 16);
+        regs[1].write(result & 0xFFFF);
         break;
     default:
         break;
@@ -184,6 +195,13 @@ void ControlUnit::subOp(){
     default:
         break;
     }
+}
+
+void ControlUnit::muxOp()
+{
+    quint32 result = alu.muxOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read());
+    regs[0].write(result >> 16);
+    regs[1].write(result && 0xFFFF);
 }
 
 void ControlUnit::andOp(){

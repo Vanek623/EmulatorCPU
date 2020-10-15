@@ -9,15 +9,16 @@ ALU::~ALU(){
 
 }
 
-quint16 ALU::addOp(const quint16 a, const quint16 b){
+quint32 ALU::addOp(const quint32 a, const quint16 b, bool doubleSize){
 
-    int result = a + b;
+    quint32 result = a + b;
 
     flags = result == 0;
     flags = flags << 1;
     flags |= result & 65536; //check 16th bit
 
-    return (quint16) (a + b);
+    if(doubleSize)return result & 0xFFFF;
+    else return result;
 }
 
 quint16 ALU::subOp(const quint16 a, const quint16 b){
@@ -25,12 +26,23 @@ quint16 ALU::subOp(const quint16 a, const quint16 b){
 
     flags = result == 0;
     flags = flags << 1;
-    flags |= result & 65536; //check 16th bit
+    flags |= result > 0xFFFF; //check 16th bit
     flags = flags << 1;
     flags |= result < 0;
 
     return static_cast<quint16> (a - b);
 
+}
+
+quint32 ALU::muxOp(const quint16 a, const quint16 b)
+{
+    quint32 result = a * b;
+
+    flags = result == 0;
+    flags = flags << 1;
+    flags |= result > 0xFFFF;
+
+    return result;
 }
 
 quint16 ALU::andOp(const quint16 a, const quint16 b){

@@ -56,6 +56,7 @@ private:
     void movOp();
     void addOp();
     void subOp();
+    void muxOp();
     void andOp();
     void orOp();
 
