@@ -1,0 +1,4 @@
+enum RamTypes{
+    PROG,
+    DATA
+};
