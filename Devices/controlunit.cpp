@@ -41,15 +41,15 @@ ControlUnit::ControlUnit(const QList<Command*> *inputProg){
 
     curCom = nullptr;
 
-    for(int i=0;i<4;i++)
+    for(int i=0;i<7;i++)
         regs << Reg();
 
     quint16 memaddr = 0;
     QList<Command*>::const_iterator it;
     for(it = inputProg->begin(); it != inputProg->end(); ++it) {
-        quint32 word = ((quint32) (*it)->getName()) << 27;
-        word += ((quint32) (*it)->getOp1()) << 16;
-        word += (quint32) (*it)->getOp2();
+        quint32 word = static_cast<quint32>((*it)->getName()) << 27;
+        word += static_cast<quint32>((*it)->getOp1()) << 16;
+        word += static_cast<quint32>((*it)->getOp2());
 
         prog->write(memaddr++,word);
     }
@@ -174,7 +174,7 @@ void ControlUnit::addOp(){
         regs[0].write( alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2(), false) );
         break;
     case ADD3:
-        a = (regs.at(1).read() << 16) + regs.at(2).read();
+        a = (regs.at(0).read() << 16) + regs.at(1).read();
         result = alu.addOp( a, regs.at(curCom->getOp1()).read(), true);
         regs[0].write(result >> 16);
         regs[1].write(result & 0xFFFF);
@@ -201,7 +201,7 @@ void ControlUnit::muxOp()
 {
     quint32 result = alu.muxOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read());
     regs[0].write(result >> 16);
-    regs[1].write(result && 0xFFFF);
+    regs[1].write(result & 0xFFFF);
 }
 
 void ControlUnit::andOp(){

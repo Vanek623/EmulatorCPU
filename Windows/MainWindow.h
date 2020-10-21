@@ -1,12 +1,17 @@
 #pragma once
 
+#include <QDebug>
+
+#include <QFile>
 #include <QLabel>
 #include <QObject>
 #include <QTextEdit>
 #include <QToolBar>
 #include <QAction>
+#include <QString>
 #include <QMainWindow>
 #include <QHBoxLayout>
+#include <QFileDialog>
 
 #include "vmwidget.h"
 
@@ -28,6 +33,9 @@ private slots:
     void run();
     void next();
     void reset();
+    void loadFile();
+    void saveFile();
+
 protected:
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);

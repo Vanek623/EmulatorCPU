@@ -27,15 +27,21 @@ int Builder::compile(const QString &rawProgTxt){
     QString editProgTxt;
     editProgTxt.append(rawProgTxt);
 
-    const QRegExp commentRegExp(QString::fromUtf8("\\/\\/[a-zA-Z0-9а-яА-Я ]*"));
+    //const QRegExp commentRegExp(QString::fromUtf8("\\/\\/[a-zA-Z0-9а-яА-Я \\[\\]+-*/<>]*"));
+    const QRegExp commentRegExp(QString::fromUtf8("\\/\\/[^\n]*"));
     const QRegExp errSimbols(QString::fromUtf8("\t"));
 
     editProgTxt.remove(commentRegExp);
     editProgTxt.remove(errSimbols);
-    //qDebug() << editProgTxt;
+
+    foreach (QString line, editProgTxt.split('\n'))
+    {
+        if(!line.isEmpty())
+            qDebug() << line;
+    }
 
     //init marks list
-    int lineCnt = 0;
+    unsigned short lineCnt = 0;
     foreach (QString line, editProgTxt.split('\n'))
     {
         const QRegExp markRegExp("[a-zA-Z]+[0-9]*:[a-zA-Z]+");
@@ -50,6 +56,7 @@ int Builder::compile(const QString &rawProgTxt){
 
     const QRegExp markExp("[a-zA-Z]+[0-9]*:");
     editProgTxt.remove(markExp);
+    qDebug() << editProgTxt;
 
     //parse to words(tokens)
     QStringList words;
@@ -95,7 +102,7 @@ void Builder::setupCommandList()
     {
         tmpInfo.name = opNames.at(i);
 
-        if(tmpInfo.name>=JP && tmpInfo.name<=JMP || tmpInfo.name == ADD3 ) tmpInfo.opCnt = 1;
+        if( (tmpInfo.name>=JP && tmpInfo.name<=JMP ) || tmpInfo.name == ADD3 ) tmpInfo.opCnt = 1;
         else if(i!=0) tmpInfo.opCnt = 2;
         else tmpInfo.opCnt = 0;
 

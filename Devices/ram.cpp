@@ -15,8 +15,8 @@ RAM::RAM(){
 }
 
 RAM::~RAM(){
-    //delete mem;
-    qDebug() << __PRETTY_FUNCTION__;
+    delete mem;
+    //qDebug() << __PRETTY_FUNCTION__;
 }
 
 void RAM::clear(){
