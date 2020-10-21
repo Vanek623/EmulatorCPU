@@ -49,7 +49,7 @@ void RamWidget::setupTable(const int colCnt, const int rowCnt,
     table->setRowCount(rowCnt);
 
     for(int i=0; i<table->rowCount(); i++)
-        rowHeaders << QString::number(i);
+        rowHeaders << QString::number(i,16).toUpper();
 
     table->setVerticalHeaderLabels(rowHeaders);
     table->setHorizontalHeaderLabels(headers);
@@ -77,15 +77,15 @@ void RamWidget::fillRow(const quint32 value, const int row)
     quint32 line = value;
     if(type == PROG)
     {
-        table->setItem(row,2, createCell(line, 0xFFFF, 16, 4));
+        table->setItem(row, 2, createCell(line, 0xFFFF, 16, 4));
         line = line >> 16;
-        table->setItem(row,1, createCell(line, 0x7FF, 16, 3));
+        table->setItem(row, 1, createCell(line, 0x7FF, 16, 3));
         line = line >> 11;
-        table->setItem(row,0, createCell(line, 0x1F, 16, 2));
+        table->setItem(row, 0, createCell(line, 0x1F, 16, 2));
     }
     else if(type == DATA)
     {
-        table->setItem(row,0, createCell(line,0xFFFF,16,4));
+        table->setItem(row, 0, createCell(line, 0xFFFF, 16, 4));
     }
 }
 

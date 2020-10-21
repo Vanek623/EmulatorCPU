@@ -74,16 +74,16 @@ void VMWidget::setupUI(){
 void VMWidget::setupRegs()
 {
     QStringList regNames;
-    regNames << "PC" << "Flags" << "H0" << "L1" << "R2" << "R3" << "R4" << "R5" << "B6";
+    regNames << "PC" << "Flags" << "H0" << "L1" << "R2" << "R3" << "I4" << "S5" << "B6";
     regs = new RegsWidget("Регистры общего назначения", regNames, 0);
 
     mainLayout->addWidget(regs);
 }
 
 void VMWidget::setupRams(){
-    progRam = new RamWidget(3,32, "Память команд", PROG);
+    progRam = new RamWidget(3, PROG_SIZE, "Память команд", PROG);
     mainLayout->addWidget(progRam);
 
-    dataRam = new RamWidget(1,8,"Память данных",DATA);
+    dataRam = new RamWidget(1, DATA_SIZE, "Память данных", DATA);
     mainLayout->addWidget(dataRam);
 }

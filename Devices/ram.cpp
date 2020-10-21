@@ -28,7 +28,7 @@ void RAM::clear(){
 
 bool RAM::write(const quint16 address, const quint32 num){
     if(address < memSize){
-        mem->insert(address, num);
+        (*mem)[address] = num;
         return false;
     }
 

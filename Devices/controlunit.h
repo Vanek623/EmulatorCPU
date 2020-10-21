@@ -5,6 +5,8 @@
 #include "ram.h"
 #include "alu.h"
 #include "command.h"
+#include "cpuconsts.h"
+
 #include <QList>
 #include <QString>
 #include <QDebug>

@@ -36,8 +36,8 @@
  */
 
 ControlUnit::ControlUnit(const QList<Command*> *inputProg){
-    prog = new RAM(32);
-    data = new RAM(16);
+    prog = new RAM(PROG_SIZE);
+    data = new RAM(DATA_SIZE);
 
     curCom = nullptr;
 

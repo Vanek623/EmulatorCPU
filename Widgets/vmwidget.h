@@ -10,6 +10,8 @@
 #include "controlunit.h"
 #include "builder.h"
 
+#include "cpuconsts.h"
+
 
 class VMWidget : public QWidget
 {

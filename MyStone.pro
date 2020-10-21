@@ -61,7 +61,8 @@ HEADERS += \
     Enums/RamType.h \
     Widgets/regsWidget.h \
     Widgets/ramWidget.h \
-    Widgets/vmwidget.h
+    Widgets/vmwidget.h \
+    System/cpuconsts.h
 
 OTHER_FILES += \
     Programms/ArrSumProg.txt \
