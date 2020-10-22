@@ -20,6 +20,10 @@ Builder::~Builder()
 }
 
 int Builder::compile(const QString &rawProgTxt){
+//    lexer lexerObj;
+
+//    lexerObj.toLexems(rawProgTxt);
+//    lexerObj.printLexemes();
     //Parse the text to lines and then
     //parse the lines to words and put it to collection
     marks = new QMap<QString,quint16>();
@@ -33,12 +37,6 @@ int Builder::compile(const QString &rawProgTxt){
 
     editProgTxt.remove(commentRegExp);
     editProgTxt.remove(errSimbols);
-
-    foreach (QString line, editProgTxt.split('\n'))
-    {
-        if(!line.isEmpty())
-            qDebug() << line;
-    }
 
     //init marks list
     unsigned short lineCnt = 0;
@@ -56,7 +54,6 @@ int Builder::compile(const QString &rawProgTxt){
 
     const QRegExp markExp("[a-zA-Z]+[0-9]*:");
     editProgTxt.remove(markExp);
-    qDebug() << editProgTxt;
 
     //parse to words(tokens)
     QStringList words;
@@ -102,7 +99,7 @@ void Builder::setupCommandList()
     {
         tmpInfo.name = opNames.at(i);
 
-        if( (tmpInfo.name>=JP && tmpInfo.name<=JMP ) || tmpInfo.name == ADD3 ) tmpInfo.opCnt = 1;
+        if( (tmpInfo.name>=JP && tmpInfo.name<=JMP ) ) tmpInfo.opCnt = 1;
         else if(i!=0) tmpInfo.opCnt = 2;
         else tmpInfo.opCnt = 0;
 

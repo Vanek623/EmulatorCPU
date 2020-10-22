@@ -42,7 +42,9 @@ SOURCES += \
     Windows/resultwindow.cpp \
     Widgets/regsWidget.cpp \
     Widgets/ramWidget.cpp \
-    Widgets/vmwidget.cpp
+    Widgets/vmwidget.cpp \
+    System/lexer.cpp \
+    System/lexeme.cpp
 
 
 
@@ -62,7 +64,9 @@ HEADERS += \
     Widgets/regsWidget.h \
     Widgets/ramWidget.h \
     Widgets/vmwidget.h \
-    System/cpuconsts.h
+    System/cpuconsts.h \
+    System/lexer.h \
+    System/lexeme.h
 
 OTHER_FILES += \
     Programms/ArrSumProg.txt \

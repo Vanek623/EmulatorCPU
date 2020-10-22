@@ -9,6 +9,7 @@
 #include <QDebug>
 #include "comnames.h"
 #include "cominfo.h"
+#include "lexer.h"
 
 class Builder
 {

@@ -19,7 +19,7 @@
  *
  * 5. ADD1 @R1, @R2 // R1 = @R1 + @R2
  * 6. ADD2 @R, OP  // R1 = @R1 + OP
- * 7. ADD3 @R, X    //[R1:R2] = [R1:R2] + @R
+ * 7. ADD3 @RH, @RL    //[R1:R2] = [R1:R2] + [@RH:@RL]
  *
  * 7. SUB1 @R1, @R2
  * 8. SUB2 @R, OP
