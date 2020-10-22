@@ -20,53 +20,23 @@ Builder::~Builder()
 }
 
 int Builder::compile(const QString &rawProgTxt){
-//    lexer lexerObj;
+    lexer lexerObj;
 
-//    lexerObj.toLexems(rawProgTxt);
-//    lexerObj.printLexemes();
-    //Parse the text to lines and then
-    //parse the lines to words and put it to collection
+    lexerObj.toLexems(rawProgTxt);
+    lexerObj.printLexemes();
+
     marks = new QMap<QString,quint16>();
 
-    QString editProgTxt;
-    editProgTxt.append(rawProgTxt);
+    QList<lexeme> *lexemes = lexerObj.getLexemes();
+    QList<lexeme>::const_iterator it;
 
-    //const QRegExp commentRegExp(QString::fromUtf8("\\/\\/[a-zA-Z0-9а-яА-Я \\[\\]+-*/<>]*"));
-    const QRegExp commentRegExp(QString::fromUtf8("\\/\\/[^\n]*"));
-    const QRegExp errSimbols(QString::fromUtf8("\t"));
-
-    editProgTxt.remove(commentRegExp);
-    editProgTxt.remove(errSimbols);
-
-    //init marks list
-    unsigned short lineCnt = 0;
-    foreach (QString line, editProgTxt.split('\n'))
+    quint16 lineCnt = 0;
+    for(it = lexemes->begin(); it != lexemes->end(); ++it)
     {
-        const QRegExp markRegExp("[a-zA-Z]+[0-9]*:[a-zA-Z]+");
-
-        if(line.contains(markRegExp) > 0)
-        {
-            marks->insert(line.split(':').at(0),lineCnt);
-        }
-
-        lineCnt++;
-    }
-
-    const QRegExp markExp("[a-zA-Z]+[0-9]*:");
-    editProgTxt.remove(markExp);
-
-    //parse to words(tokens)
-    QStringList words;
-    foreach (QString line, editProgTxt.split('\n'))
-    {
-        foreach (QString word, line.split(' '))
-        {
-            if(!word.isEmpty())
-            {
-                words.append(word);
-                //qDebug() << word;
-            }
-        }
+        if( (*it).getType() == MARK_I)
+            marks->insert((*it).getValue(), lineCnt);
+        else if((*it).getType() == COMMAND)
+            lineCnt++;
     }
 
     setupCommandList();
@@ -107,16 +77,69 @@ void Builder::setupCommandList()
     }
 }
 
-int Builder::parse(const QStringList &words)
+int Builder::parse(const QList<lexeme> &lexemes)
 {
     program = new QList<Command*>();
-    QStringList::const_iterator it;
+    QList<lexeme>::const_iterator it;
     int line = 0;
 
-    for(it = words.begin(); it != words.end(); ++it){
+    for(it = lexemes.begin(); it != lexemes.end(); ++it){
         quint16 op1, op2;
+        lexeme lex = *it;
 
-        if(commandList->contains(*it))
+        if( lex.getType() == COMMAND && commandList->contains(lex.getValue()) )
+        {
+            COMINFO curInfo = commandList->value(lex.getValue());
+
+            if(curInfo.opCnt == 1 && it + 1 != lexemes.end())
+            {
+                lexeme op = *(++it);
+                if(op.getType() == OPERAND)
+                {
+                    op1 = op.getValue().toUShort(nullptr, 16);
+                }
+                else if(op.getType() == MARK_U && marks->contains(op.getValue()))
+                {
+                    op1 = marks->value(op.getValue());
+                }
+                else
+                {
+                    return line;
+                }
+            }
+            else if(curInfo.opCnt == 2 && it+1 != lexemes.end() && it+2 != lexemes.end())
+            {
+                for(int i=0 ; i<2; i++)
+                {
+                    lexeme op = *(++it);
+                    if(op.getType() == OPERAND)
+                    {
+                        quint16 tmp_op = op.getValue().toUShort(nullptr, 16);
+                        if(i == 0) op1 = tmp_op;
+                        else op2 = tmp_op;
+                    }
+                    else if(op.getType() == MARK_U && marks->contains(op.getValue()))
+                    {
+                        op1 = marks->value(op.getValue());
+                    }
+                    else
+                    {
+                        return line;
+                    }
+                }
+
+            }
+            else if(curInfo.opCnt == 0)
+            {
+
+            }
+            else
+            {
+                return line;
+            }
+        }
+
+        if(commandList->contains( (*it).getValue() ))
         {
             COMINFO curInfo = commandList->value(*it);
 

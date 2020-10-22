@@ -31,6 +31,7 @@ void lexer::toLexems(const QString &text)
             }
         }
         if(!skip) word.append(sim);
+        if(i == text.length() - 1 && !word.isEmpty()) addLexem(word);
     }
 }
 

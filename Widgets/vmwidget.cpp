@@ -2,6 +2,9 @@
 
 VMWidget::VMWidget()
 {
+    cpu = nullptr;
+    resultWindow = nullptr;
+
     setupUI();
 }
 

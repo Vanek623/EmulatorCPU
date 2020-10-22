@@ -29,7 +29,7 @@ signals:
 
 private:
     void setupCommandList();
-    int parse(const QStringList &words);
+    int parse(const QList<lexeme> &lexemes);
     COMINFO getInfo(const QString &word,const QList<int> &shifts) const;
 };
 
