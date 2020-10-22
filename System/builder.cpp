@@ -23,7 +23,7 @@ int Builder::compile(const QString &rawProgTxt){
     lexer lexerObj;
 
     lexerObj.toLexems(rawProgTxt);
-    lexerObj.printLexemes();
+    //lexerObj.printLexemes();
 
     marks = new QMap<QString,quint16>();
 
@@ -41,7 +41,7 @@ int Builder::compile(const QString &rawProgTxt){
 
     setupCommandList();
 
-    return parse(words);
+    return parse(lexemes);
 }
 
 QList<Command*> *Builder::getProgrammList() const
@@ -77,37 +77,40 @@ void Builder::setupCommandList()
     }
 }
 
-int Builder::parse(const QList<lexeme> &lexemes)
+int Builder::parse(const QList<lexeme> *lexemes)
 {
     program = new QList<Command*>();
     QList<lexeme>::const_iterator it;
     int line = 0;
 
-    for(it = lexemes.begin(); it != lexemes.end(); ++it){
+    for(it = lexemes->begin(); it != lexemes->end(); ++it){
         quint16 op1, op2;
         lexeme lex = *it;
 
-        if( lex.getType() == COMMAND && commandList->contains(lex.getValue()) )
+        if( lex.getType() == MARK_I) continue;
+        else if( lex.getType() == COMMAND && commandList->contains(lex.getValue()) )
         {
             COMINFO curInfo = commandList->value(lex.getValue());
 
-            if(curInfo.opCnt == 1 && it + 1 != lexemes.end())
+            if(curInfo.opCnt == 1 && it + 1 != lexemes->end())
             {
                 lexeme op = *(++it);
                 if(op.getType() == OPERAND)
                 {
                     op1 = op.getValue().toUShort(nullptr, 16);
+                    op2 = 0;
                 }
                 else if(op.getType() == MARK_U && marks->contains(op.getValue()))
                 {
                     op1 = marks->value(op.getValue());
+                    op2 = 0;
                 }
                 else
                 {
                     return line;
                 }
             }
-            else if(curInfo.opCnt == 2 && it+1 != lexemes.end() && it+2 != lexemes.end())
+            else if(curInfo.opCnt == 2 && it+1 != lexemes->end() && it+2 != lexemes->end())
             {
                 for(int i=0 ; i<2; i++)
                 {
@@ -120,7 +123,9 @@ int Builder::parse(const QList<lexeme> &lexemes)
                     }
                     else if(op.getType() == MARK_U && marks->contains(op.getValue()))
                     {
-                        op1 = marks->value(op.getValue());
+                        quint16 tmp_op = marks->value(op.getValue());
+                        if(i == 0) op1 = tmp_op;
+                        else op2 = tmp_op;
                     }
                     else
                     {
@@ -131,57 +136,12 @@ int Builder::parse(const QList<lexeme> &lexemes)
             }
             else if(curInfo.opCnt == 0)
             {
-
+                op1 = op2 = 0;
             }
             else
             {
                 return line;
             }
-        }
-
-        if(commandList->contains( (*it).getValue() ))
-        {
-            COMINFO curInfo = commandList->value(*it);
-
-            if(curInfo.opCnt >= 1)
-            {
-                bool isOk;
-                quint16 tmpOp;
-                if(it + 1 != words.end())
-                {
-                    //Обработка операнда связанного с меткой
-                    if(curInfo.name >= JP && curInfo.name <= JMP)
-                    {
-                        if(marks->contains(*(++it))) op1 = marks->value(*it);
-                        else return line;
-                    }
-                    //Обычная обработка операнда
-                    else
-                    {
-                        tmpOp = (*(++it)).toShort(&isOk);
-                        if(isOk) op1 = tmpOp;
-                        else return line;
-                    }
-
-                }
-                else return line;
-
-                if(curInfo.opCnt == 2)
-                {
-                    if(it + 1 != words.end())
-                    {
-                        tmpOp = (*(++it)).toShort(&isOk);
-                        if(isOk) op2 = tmpOp;
-                        else return line;
-                    }
-                    else
-                    {
-                        return line;
-                    }
-                }
-                else op2 = 0;
-            }
-            else op1 = op2 = 0;
 
             program->append(new Command(curInfo.name,op1,op2));
         }

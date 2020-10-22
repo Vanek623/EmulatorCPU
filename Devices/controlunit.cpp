@@ -41,7 +41,7 @@ ControlUnit::ControlUnit(const QList<Command*> *inputProg){
 
     curCom = nullptr;
 
-    for(int i=0;i<7;i++)
+    for(int i=0;i<8;i++)
         regs << Reg();
 
     quint16 memaddr = 0;
@@ -165,7 +165,7 @@ void ControlUnit::movOp(){
 }
 
 void ControlUnit::addOp(){
-    quint32 a, result;
+    quint32 a, b, result;
     switch (curCom->getName()) {
     case ADD1:
         regs[0].write(alu.addOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read(), false));
@@ -174,8 +174,10 @@ void ControlUnit::addOp(){
         regs[0].write( alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2(), false) );
         break;
     case ADD3:
-        a = (regs.at(0).read() << 16) + regs.at(1).read();
-        result = alu.addOp( a, regs.at(curCom->getOp1()).read(), true);
+        a = (regs.at(0).read() << 16) | regs.at(1).read();
+        b = (regs.at(curCom->getOp1()).read() << 16) | regs.at(curCom->getOp2()).read();
+        result = alu.addOp( a, b, true);
+        qDebug() << QString::number(a, 16).toUpper() << QString::number(result, 16).toUpper();
         regs[0].write(result >> 16);
         regs[1].write(result & 0xFFFF);
         break;

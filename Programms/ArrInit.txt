@@ -1,16 +1,42 @@
-MOV1 5 3//SIZE = 3
-MOV1 6 4//BASE = 4
-MOV1 4 0//ID = 0
-MOV4 6 5//M[BASE]  = SIZE
-MOV4 4 5//M[ID] = SIZE
-ADD2 4 1//ACC = ID+1
-MOV5 4 0//ID = ACC
-L1:MOV4 4 4//M[ID] = ID
-ADD1 4 6 // ACC = ID + BASE
+/init params of arrays
+MOV1 6 3//SIZE = 3
+MOV1 7 4//BASE = 4
+MOV1 5 0//ID = 0
+
+/write size to mem
+MOV4 7 6//M[BASE]  = SIZE
+MOV4 5 6//M[ID] = SIZE
+ADD2 5 1//ACC = ID+1
+MOV5 5 0//ID = ACC
+
+/writing num to mem
+L1:MOV4 5 5//M[ID] = ID
+ADD1 5 7 // ACC = ID + BASE
 MOV4 0 0//M[ID+BASE] = ID + BASE
-ADD2 4 1//ACC = ID+1
-MOV5 4 0//ID = ACC
-SUB1 5 4 //ACC =  SIZE - ID
+
+/checking the end
+ADD2 5 1//ACC = ID+1
+MOV5 5 0//ID = ACC
+SUB1 6 5 //ACC =  SIZE - ID
 JN L2//JMP TO L2 IF ACC < 0
 JMP L1
-L2:NOP
+L2:MOV1 5 1
+
+/read x and y
+L3:MOV3 4 5
+ADD1 5 7
+MOV3 0 0
+
+//mux x,y and add to sum
+MUX 4 0
+ADD3 2 3
+MOV5 2 0
+MOV5 3 1
+
+/checking the end
+ADD2 5 1//ACC = ID+1
+MOV5 5 0//ID = ACC
+SUB1 6 5 //ACC =  SIZE - ID
+JN L4//JMP TO L4 IF ACC < 0
+JMP L3
+L4:NOP

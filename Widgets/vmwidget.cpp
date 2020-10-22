@@ -77,7 +77,7 @@ void VMWidget::setupUI(){
 void VMWidget::setupRegs()
 {
     QStringList regNames;
-    regNames << "PC" << "Flags" << "H0" << "L1" << "R2" << "R3" << "I4" << "S5" << "B6";
+    regNames << "PC" << "Flags" << "H0" << "L1" << "R2" << "R3"  << "R4" << "I5" << "S6" << "B7";
     regs = new RegsWidget("Регистры общего назначения", regNames, 0);
 
     mainLayout->addWidget(regs);

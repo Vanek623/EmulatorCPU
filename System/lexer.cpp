@@ -51,7 +51,13 @@ void lexer::addLexem(const QString word)
     lexeme lex;
     lex.setValue(word);
 
-    if(markInitExp.exactMatch(word)) lex.setType(MARK_I);
+    if(markInitExp.exactMatch(word))
+    {
+        lex.setType(MARK_I);
+        QString tmp = word;
+        tmp.chop(1);
+        lex.setValue(tmp);
+    }
     else if(markUseExp.exactMatch(word)) lex.setType(MARK_U);
     else if(commandExp.exactMatch(word)) lex.setType(COMMAND);
     else if(operandRegExp.exactMatch(word)) lex.setType(OPERAND);
