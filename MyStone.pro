@@ -39,15 +39,15 @@ SOURCES += \
     Devices/controlunit.cpp \
     Devices/reg.cpp \
     Windows/MainWindow.cpp \
-    Windows/resultwindow.cpp \
     Widgets/regsWidget.cpp \
     Widgets/ramWidget.cpp \
     Widgets/vmwidget.cpp \
     System/lexer.cpp \
     System/lexeme.cpp \
-    Widgets/codeeditor.cpp \
-    Widgets/linenumbers.cpp \
-    System/highlighter.cpp
+    System/highlighter.cpp \
+    Widgets/codearea.cpp \
+    Widgets/linenumbersarea.cpp \
+    Widgets/codeeditor.cpp
 
 
 
@@ -61,7 +61,6 @@ HEADERS += \
     Devices/controlunit.h \
     Devices/reg.h \
     Windows/MainWindow.h \
-    Windows/resultwindow.h \
     Enums/comnames.h \
     Enums/RamType.h \
     Widgets/regsWidget.h \
@@ -70,9 +69,10 @@ HEADERS += \
     System/cpuconsts.h \
     System/lexer.h \
     System/lexeme.h \
-    Widgets/codeeditor.h \
-    Widgets/linenumbers.h \
-    System/highlighter.h
+    System/highlighter.h \
+    Widgets/codearea.h \
+    Widgets/linenumbersarea.h \
+    Widgets/codeeditor.h
 
 OTHER_FILES += \
     Programms/ArrSumProg.txt \

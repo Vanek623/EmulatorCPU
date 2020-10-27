@@ -35,7 +35,7 @@
  * 18. NOP, X, X
  */
 
-ControlUnit::ControlUnit(const QList<Command*> *inputProg){
+ControlUnit::ControlUnit(){
     prog = new RAM(PROG_SIZE);
     data = new RAM(DATA_SIZE);
 
@@ -44,17 +44,7 @@ ControlUnit::ControlUnit(const QList<Command*> *inputProg){
     for(int i=0;i<8;i++)
         regs << Reg();
 
-    quint16 memaddr = 0;
-    QList<Command*>::const_iterator it;
-    for(it = inputProg->begin(); it != inputProg->end(); ++it) {
-        quint32 word = static_cast<quint32>((*it)->getName()) << 27;
-        word += static_cast<quint32>((*it)->getOp1()) << 16;
-        word += static_cast<quint32>((*it)->getOp2());
-
-        prog->write(memaddr++,word);
-    }
-
-    pc = 0;
+    tickCounter = 0;
 }
 
 ControlUnit::~ControlUnit(){
@@ -65,8 +55,29 @@ ControlUnit::~ControlUnit(){
         delete curCom;
 }
 
+bool ControlUnit::Init(const QList<Command *> *inputProg)
+{
+    if(inputProg->size() <= prog->getMemSize())
+    {
+        quint16 memaddr = 0;
+        QList<Command*>::const_iterator it;
+        for(it = inputProg->begin(); it != inputProg->end(); ++it) {
+            quint32 word = static_cast<quint32>((*it)->getName()) << 27;
+            word += static_cast<quint32>((*it)->getOp1()) << 16;
+            word += static_cast<quint32>((*it)->getOp2());
+
+            prog->write(memaddr++,word);
+        }
+
+        pc = 0;
+        return true;
+    }
+
+    return false;
+}
+
 bool ControlUnit::Work(){
-    if(pc < prog->getMemSize()){
+    if(pc < prog->getMemSize() && tickCounter < MAX_TICK_COUNT){
         quint32 word = prog->read(pc);
         quint16 op2 = word & 0xFFFF;
         quint16 op1 = (word >> 16) & 0x7FF;
@@ -122,6 +133,7 @@ bool ControlUnit::Work(){
         flags = alu.readFlags();
 
         pc++;
+        tickCounter++;
 
         return true;
     }
@@ -140,6 +152,7 @@ void ControlUnit::Reset()
 
     flags = 0;
     pc = 0;
+    tickCounter = 0;
 }
 
 void ControlUnit::movOp(){
@@ -276,5 +289,10 @@ QList<quint16> ControlUnit::getRegs() const{
         tmp.append( (*it).read() );
 
     return tmp;
+}
+
+quint16 ControlUnit::getPC() const
+{
+    return pc;
 }
 

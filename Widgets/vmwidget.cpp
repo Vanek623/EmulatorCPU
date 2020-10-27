@@ -2,8 +2,7 @@
 
 VMWidget::VMWidget()
 {
-    cpu = nullptr;
-    resultWindow = nullptr;
+    cpu = new ControlUnit();
 
     setupUI();
 }
@@ -19,34 +18,39 @@ void VMWidget::resizeTables(){
 }
 
 void VMWidget::compileProg(const QString &progTxt){
-    Builder builder;
-    int compileResult = builder.compile(progTxt);
-    if(compileResult == -1){
-        if(cpu != nullptr)
-        {
-            delete cpu;
-            cpu = nullptr;
-        }
-
-        cpu = new ControlUnit(builder.getProgrammList());
-
-        progRam->updateContent(cpu->getProg());
-        //qDebug() << "OK";
-    }
-
-    if(resultWindow != nullptr)
+    if(!progTxt.isEmpty())
     {
-        delete resultWindow;
-        resultWindow = nullptr;
-    }
+        Builder builder;
+        int compileResult = builder.compile(progTxt);
+        if(compileResult == -1){
+            if(!cpu->Init(builder.getProgrammList()))
+            {
+                QString compileResultStr = "Размер программы слишком большой!";
+                QMessageBox::warning(this, "Ошибка", compileResultStr);
+                return;
+            }
+            else
+            {
+                QString compileResultStr = "Компиляция прошла успешно!";
+                QMessageBox::information(this, "Результат компиляции", compileResultStr);
+            }
 
-    resultWindow = new ResultWindow(this, compileResult);
-    resultWindow->show();
+            progRam->updateContent(cpu->getProg());
+            //qDebug() << "OK";
+        }
+        else
+        {
+            QString compileResultStr = "Компиляция прошла неудачно!\nОшибка в "
+                                  + QString::number(compileResult + 1) + " строке...";
+
+            QMessageBox::warning(this, "Результат компиляции", compileResultStr);
+        }
+    }
 }
 
 void VMWidget::runProg(){
-    while(cpu->Work());
 
+    while(cpu->Work());
     dataRam->updateContent(cpu->getData());
     regs->updateValues(cpu->getRegs());
 }

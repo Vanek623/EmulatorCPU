@@ -9,7 +9,7 @@ MainWindow::~MainWindow()
 {}
 
 void MainWindow::compile(){
-    cpuWidget->compileProg(progTxt->toPlainText());
+    cpuWidget->compileProg(codeEditor->getProgrammText());
 }
 
 void MainWindow::run(){
@@ -34,7 +34,7 @@ void MainWindow::loadFile()
         if(file.open(QIODevice::ReadOnly))
         {
             QTextStream stream(&file);
-            progTxt->setPlainText(stream.readAll());
+            codeEditor->setProgrammText(stream.readAll());
             file.close();
         }
     }
@@ -50,7 +50,7 @@ void MainWindow::saveFile()
         if(file.open(QIODevice::WriteOnly))
         {
             QTextStream stream(&file);
-            stream << progTxt->toPlainText();
+            stream << codeEditor->getProgrammText();
             file.close();
         }
     }
@@ -76,7 +76,7 @@ void MainWindow::setupUI(){
     QHBoxLayout *layoutH = new QHBoxLayout();
 
     setupTextArea();
-    layoutH->addWidget(progTxt);
+    layoutH->addWidget(codeEditor);
 
     cpuWidget = new VMWidget();
     layoutH->addWidget(cpuWidget);
@@ -116,9 +116,9 @@ void MainWindow::setupControls()
 
 void MainWindow::setupTextArea()
 {
-    progTxt = new CodeEditor(this);
+    codeEditor = new CodeEditor(this);
     //progTxt->setPlainText("MOV1 1 1\nMOV1 2 2\nADD1 1 2");
-    progTxt->setMaximumWidth(300);
+    codeEditor->setMaximumWidth(300);
 }
 
 QLabel *MainWindow::createTitle(const QString &title)

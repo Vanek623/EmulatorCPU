@@ -23,7 +23,7 @@ int Builder::compile(const QString &rawProgTxt){
     lexer lexerObj;
 
     lexerObj.toLexems(rawProgTxt);
-    lexerObj.printLexemes();
+    //lexerObj.printLexemes();
 
     marks = new QMap<QString,quint16>();
 
@@ -146,7 +146,7 @@ int Builder::parse(const QList<lexeme> *lexemes)
                 return line;
             }
 
-            program->append(new Command(curInfo.name,op1,op2));
+            program->append(new Command(curInfo.name, op1, op2));
         }
         else if(lex.getType() != EMPTY) return line;
 

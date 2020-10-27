@@ -10,6 +10,7 @@ void lexer::toLexems(const QString &text)
     const QString brakes = " \n:/";
     QString word = "";
     bool isComment = false;
+    bool isCommandFound = false;
 
     for(int i=0; i<text.length(); i++)
     {
@@ -24,10 +25,19 @@ void lexer::toLexems(const QString &text)
             {
                 if(j == 2) word.append(sim);
                 if(!word.isEmpty())
+                {
                     addLexem(word);
-                //addLexem(word);
-                if(j == 1 && word.isEmpty())
+                    isCommandFound = true;
+                }
+
+                if(j == 1 && !isCommandFound)
+                {
                     addLexem("EMPTY");
+                }
+                else if(j == 1)
+                {
+                    isCommandFound = false;
+                }
 
                 skip = true;
                 word = "";
@@ -79,7 +89,7 @@ void lexer::addLexem(const QString &word)
         lex.setType(OPERAND);
         lex.setValue(convertNumber(word, false));
     }
-    else if(word.isEmpty()) lex.setType(EMPTY);
+    else if(word.compare("EMPTY") == 0) lex.setType(EMPTY);
     else lex.setType(UNKWNOWN);
 
     hasUnknown = hasUnknown || lex.getType() == UNKWNOWN;

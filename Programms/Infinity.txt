@@ -1,0 +1,6 @@
+MOV1 1 1
+MOV1 0 1
+
+L1:
+ADD1 0 1
+JMP L1

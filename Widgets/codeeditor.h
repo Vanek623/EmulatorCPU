@@ -1,26 +1,23 @@
 #pragma once
+#include <QWidget>
+#include <QHBoxLayout>
 
-#include <QTextBlock>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QPlainTextEdit>
-#include "highlighter.h"
+#include "linenumbersarea.h"
+#include "codearea.h"
 
-class CodeEditor : public QPlainTextEdit
+class CodeEditor : public QWidget
 {
+    Q_OBJECT
 private:
-    QWidget *lineNumbers;
-    HighLighter *highlighter;
+    LineNumbersArea *lineArea;
+    CodeArea *codeArea;
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
 public:
-    CodeEditor(QWidget *parent = nullptr);
-    ~CodeEditor();
+    explicit CodeEditor(QWidget *parent = nullptr);
 
-    void lineNumbersPaintEvent(QPaintEvent *event);
-    int lineNumbersWidth();
-    void resizeEvent(QResizeEvent *e);
-
-private slots:
-    void updateLineNumbersWidth(int blockCount);
-    void highlightCurrentLine();
-    void updateLineNumbers(const QRect &, int);
+    QString getProgrammText() const;
+    void setProgrammText(const QString &text);
 };

@@ -38,17 +38,21 @@ private:
     quint16 flags;
     quint16 pc;
 
+    quint16 tickCounter;
+
 public:
-    ControlUnit(const QList<Command*> *inputProg);
+    ControlUnit();
     ~ControlUnit();
 
-    void Init();
+    bool Init(const QList<Command*> *inputProg);
     bool Work();
     void Reset();
 
     QList<quint32> *getData() const;
     QList<quint32> *getProg() const;
     QList<quint16> getRegs() const;
+
+    quint16 getPC() const;
 
 private:
     void movOp();

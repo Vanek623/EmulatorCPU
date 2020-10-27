@@ -2,10 +2,10 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
+#include <QMessageBox>
 
 #include "ramWidget.h"
 #include "regsWidget.h"
-#include "resultwindow.h"
 
 #include "controlunit.h"
 #include "builder.h"
@@ -22,7 +22,6 @@ private:
     QVBoxLayout *mainLayout;
 
     ControlUnit *cpu;
-    ResultWindow *resultWindow;
 
 public:
     VMWidget();

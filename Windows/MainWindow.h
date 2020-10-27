@@ -14,13 +14,14 @@
 #include <QPlainTextEdit>
 
 #include "vmwidget.h"
+//#include "codeeditor_old.h"
 #include "codeeditor.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
-    CodeEditor *progTxt;
+    CodeEditor *codeEditor;
     VMWidget *cpuWidget;
     QHBoxLayout *mainLayout;
     QToolBar *tools;
