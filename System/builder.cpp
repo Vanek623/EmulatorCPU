@@ -23,7 +23,7 @@ int Builder::compile(const QString &rawProgTxt){
     lexer lexerObj;
 
     lexerObj.toLexems(rawProgTxt);
-    //lexerObj.printLexemes();
+    lexerObj.printLexemes();
 
     marks = new QMap<QString,quint16>();
 
@@ -87,7 +87,10 @@ int Builder::parse(const QList<lexeme> *lexemes)
         quint16 op1, op2;
         lexeme lex = *it;
 
-        if( lex.getType() == MARK_I) continue;
+        if( lex.getType() == MARK_I) {
+            line++;
+            continue;
+        }
         else if( lex.getType() == COMMAND && commandList->contains(lex.getValue()) )
         {
             COMINFO curInfo = commandList->value(lex.getValue());
@@ -145,7 +148,7 @@ int Builder::parse(const QList<lexeme> *lexemes)
 
             program->append(new Command(curInfo.name,op1,op2));
         }
-        else return line;
+        else if(lex.getType() != EMPTY) return line;
 
         line++;
     }

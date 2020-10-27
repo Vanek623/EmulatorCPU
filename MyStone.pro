@@ -46,7 +46,8 @@ SOURCES += \
     System/lexer.cpp \
     System/lexeme.cpp \
     Widgets/codeeditor.cpp \
-    Widgets/linenumbers.cpp
+    Widgets/linenumbers.cpp \
+    System/highlighter.cpp
 
 
 
@@ -70,7 +71,8 @@ HEADERS += \
     System/lexer.h \
     System/lexeme.h \
     Widgets/codeeditor.h \
-    Widgets/linenumbers.h
+    Widgets/linenumbers.h \
+    System/highlighter.h
 
 OTHER_FILES += \
     Programms/ArrSumProg.txt \

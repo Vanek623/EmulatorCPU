@@ -23,7 +23,11 @@ void lexer::toLexems(const QString &text)
             if(sim == brakes.at(j))
             {
                 if(j == 2) word.append(sim);
-                if(!word.isEmpty()) addLexem(word);
+                if(!word.isEmpty())
+                    addLexem(word);
+                //addLexem(word);
+                if(j == 1 && word.isEmpty())
+                    addLexem("EMPTY");
 
                 skip = true;
                 word = "";
@@ -42,11 +46,16 @@ QList<lexeme> *lexer::getLexemes()
 
 void lexer::printLexemes() const
 {
+    int cnt = 1;
     for(int i=0; i < lexemes.size(); i++)
-        qDebug() << lexemes.at(i).getType() << lexemes.at(i).getValue();
+    {
+        lexeme lex = lexemes.at(i);
+        if(!(lex.getType() == OPERAND || lex.getType() == MARK_U))
+        qDebug() << cnt++ << lex.getType() << lex.getValue();
+    }
 }
 
-void lexer::addLexem(const QString word)
+void lexer::addLexem(const QString &word)
 {
     lexeme lex;
     lex.setValue(word);
@@ -60,10 +69,36 @@ void lexer::addLexem(const QString word)
     }
     else if(markUseExp.exactMatch(word)) lex.setType(MARK_U);
     else if(commandExp.exactMatch(word)) lex.setType(COMMAND);
-    else if(operandRegExp.exactMatch(word)) lex.setType(OPERAND);
+    else if(operandDecRegExp.exactMatch(word))
+    {
+        lex.setType(OPERAND);
+        lex.setValue(convertNumber(word, true));
+    }
+    else if(operandHexRegExp.exactMatch(word))
+    {
+        lex.setType(OPERAND);
+        lex.setValue(convertNumber(word, false));
+    }
+    else if(word.isEmpty()) lex.setType(EMPTY);
     else lex.setType(UNKWNOWN);
 
     hasUnknown = hasUnknown || lex.getType() == UNKWNOWN;
 
     lexemes.append(lex);
+}
+
+QString lexer::convertNumber(const QString &number, const bool fromDec)
+{
+    QString result;
+    if(fromDec)
+    {
+        result = QString::number(number.toUShort(nullptr, 10), 16);
+    }
+    else
+    {
+        result = number;
+        result.remove("0x");
+    }
+
+    return result;
 }

@@ -11,6 +11,20 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit (parent)
 
     updateLineNumbersWidth(0);
     highlightCurrentLine();
+    highlighter = new HighLighter(this->document());
+    QFont font;
+    font.setFamily("Courier");
+    font.setStyleHint(QFont::Monospace);
+    font.setFixedPitch(true);
+
+    this->setFont(font);
+
+    this->setStyleSheet("background-color: black; color: white; font-size: 14px;");
+}
+
+CodeEditor::~CodeEditor()
+{
+    delete highlighter;
 }
 
 void CodeEditor::resizeEvent(QResizeEvent *e)
@@ -78,7 +92,7 @@ void CodeEditor::highlightCurrentLine()
     {
         QTextEdit::ExtraSelection selection;
 
-        QColor lineColor = QColor(Qt::yellow).lighter(160);
+        QColor lineColor = QColor(Qt::gray).lighter(50);
 
         selection.format.setBackground(lineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);

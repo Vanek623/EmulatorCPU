@@ -1,36 +1,38 @@
 /init params of arrays
-MOV1 6 3//SIZE = 3
-MOV1 7 4//BASE = 4
+MOV1 6 0x3/SIZE = 3
+MOV1 7 0x4/BASE = 4
 
 /fill array X
-MOV2 0 3
-MOV2 1 FFFF
-MOV2 2 FFFF
-MOV2 3 FFFF
+MOV2 0 0x3
+MOV2 1 0xFFFF
+MOV2 2 0xFFFF
+MOV2 3 0xFFFF
 
 /fil array Y
-MOV2 4 3
-MOV2 5 1
-MOV2 6 2
-MOV2 7 3
+MOV2 4 0x3
+MOV2 5 0x1
+MOV2 6 0x2
+MOV2 7 0x3
 
-MOV1 5 1
+MOV1 5 0x1
 
 /read x and y
-L3:MOV3 4 5
+L1:
+MOV3 4 5
 ADD1 5 7
 MOV3 0 0
 
-//mux x,y and add to sum
+/mux x,y and add to sum
 MUX 4 0
 ADD3 2 3
 MOV5 2 0
 MOV5 3 1
 
 /checking the end
-ADD2 5 1//ACC = ID+1
-MOV5 5 0//ID = ACC
-SUB1 6 5 //ACC =  SIZE - ID
-JN L4//JMP TO L4 IF ACC < 0
-JMP L3
-L4:NOP
+ADD2 5 0x1/ACC = ID+1
+MOV5 5 0/ID = ACC
+SUB1 6 5 /ACC =  SIZE - ID
+JN L2/JMP TO L4 IF ACC < 0
+JMP L1
+L2:
+NOP

@@ -7,7 +7,8 @@ enum LexType{
     COMMAND,
     OPERAND,
     MARK_U,
-    MARK_I
+    MARK_I,
+    EMPTY
 };
 
 class lexeme
