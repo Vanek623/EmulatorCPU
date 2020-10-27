@@ -1,5 +1,4 @@
-#ifndef CONTROLUNIT_H
-#define CONTROLUNIT_H
+#pragma once
 
 #include "reg.h"
 #include "ram.h"
@@ -9,9 +8,6 @@
 
 #include <QList>
 #include <QString>
-#include <QDebug>
-
-
 
 /*
  * Регистры:
@@ -65,5 +61,3 @@ private:
     void jmpOp();
     void nopOp();
 };
-
-#endif // CONTROLUNIT_H

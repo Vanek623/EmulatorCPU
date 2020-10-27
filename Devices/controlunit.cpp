@@ -177,7 +177,6 @@ void ControlUnit::addOp(){
         a = (regs.at(0).read() << 16) | regs.at(1).read();
         b = (regs.at(curCom->getOp1()).read() << 16) | regs.at(curCom->getOp2()).read();
         result = alu.addOp( a, b, true);
-        qDebug() << QString::number(a, 16).toUpper() << QString::number(result, 16).toUpper();
         regs[0].write(result >> 16);
         regs[1].write(result & 0xFFFF);
         break;

@@ -34,7 +34,7 @@ void MainWindow::loadFile()
         if(file.open(QIODevice::ReadOnly))
         {
             QTextStream stream(&file);
-            progTxt->setText(stream.readAll());
+            progTxt->setPlainText(stream.readAll());
             file.close();
         }
     }
@@ -116,8 +116,8 @@ void MainWindow::setupControls()
 
 void MainWindow::setupTextArea()
 {
-    progTxt = new QTextEdit();
-    progTxt->setText("MOV1 1 1\nMOV1 2 2\nADD1 1 2");
+    progTxt = new CodeEditor(this);
+    progTxt->setPlainText("MOV1 1 1\nMOV1 2 2\nADD1 1 2");
     progTxt->setMaximumWidth(300);
 }
 

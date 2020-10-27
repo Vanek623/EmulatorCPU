@@ -5,21 +5,22 @@
 #include <QFile>
 #include <QLabel>
 #include <QObject>
-#include <QTextEdit>
 #include <QToolBar>
 #include <QAction>
 #include <QString>
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include <QFileDialog>
+#include <QPlainTextEdit>
 
 #include "vmwidget.h"
+#include "codeeditor.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
-    QTextEdit *progTxt;
+    CodeEditor *progTxt;
     VMWidget *cpuWidget;
     QHBoxLayout *mainLayout;
     QToolBar *tools;

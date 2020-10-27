@@ -44,7 +44,9 @@ SOURCES += \
     Widgets/ramWidget.cpp \
     Widgets/vmwidget.cpp \
     System/lexer.cpp \
-    System/lexeme.cpp
+    System/lexeme.cpp \
+    Widgets/codeeditor.cpp \
+    Widgets/linenumbers.cpp
 
 
 
@@ -66,7 +68,9 @@ HEADERS += \
     Widgets/vmwidget.h \
     System/cpuconsts.h \
     System/lexer.h \
-    System/lexeme.h
+    System/lexeme.h \
+    Widgets/codeeditor.h \
+    Widgets/linenumbers.h
 
 OTHER_FILES += \
     Programms/ArrSumProg.txt \
