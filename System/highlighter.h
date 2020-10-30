@@ -28,6 +28,7 @@ protected:
 private:
     void setupPatterns();
     void setupCommands();
+
     void addRule(const QString &patternStr, const QTextCharFormat format);
     void findAndSetFormat(const int begin, const QString &word);
 };

@@ -33,11 +33,13 @@ void LineNumbersArea::paintEvent(QPaintEvent *event)
 void LineNumbersArea::updateNumberCounts(int lineCount)
 {
     this->lineCount = lineCount;
+    this->update();
 }
 
 void LineNumbersArea::updateLineNumbers(int scrollValue)
 {
     startLine = scrollValue;
+    this->update();
 }
 
 int LineNumbersArea::lineNumbersWidth(int lineCount) const
@@ -51,7 +53,7 @@ int LineNumbersArea::lineNumbersWidth(int lineCount) const
         digits++;
     }
 
-    int space = 3 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * digits;
+    int space = 3 + fontMetrics().averageCharWidth() * digits;
 
     return space;
 }
@@ -67,14 +69,4 @@ void LineNumbersArea::setStyles()
 
     this->setStyleSheet("font-size: 14px;");
     this->setMinimumWidth(10);
-}
-
-void LineNumbersArea::updateWidth(int digit)
-{
-    int newWidth = lineNumbersWidth(digit);
-    if(newWidth != this->width())
-    {
-        this->resize(newWidth, this->height());
-    }
-
 }

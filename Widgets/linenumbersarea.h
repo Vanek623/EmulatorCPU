@@ -29,5 +29,4 @@ public slots:
 private:
     int lineNumbersWidth(int lineCount) const;
     void setStyles();
-    void updateWidth(int digit);
 };

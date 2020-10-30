@@ -3,7 +3,7 @@
 void CodeEditor::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    lineArea->update();
+    //lineArea->update();
 }
 
 CodeEditor::CodeEditor(QWidget *parent) : QWidget(parent)
