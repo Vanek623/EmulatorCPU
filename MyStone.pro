@@ -34,6 +34,10 @@ SOURCES += \
         main.cpp \
     System/command.cpp \
     System/builder.cpp \
+    System/lexer.cpp \
+    System/lexeme.cpp \
+    System/highlighter.cpp \
+    System/binarymanager.cpp \
     Devices/alu.cpp \
     Devices/ram.cpp \
     Devices/controlunit.cpp \
@@ -42,20 +46,20 @@ SOURCES += \
     Widgets/regsWidget.cpp \
     Widgets/ramWidget.cpp \
     Widgets/vmwidget.cpp \
-    System/lexer.cpp \
-    System/lexeme.cpp \
-    System/highlighter.cpp \
     Widgets/codearea.cpp \
     Widgets/linenumbersarea.cpp \
     Widgets/codeeditor.cpp
-
-
 
 HEADERS += \
     System/cominfo.h \
     System/builder.h \
     System/comnames.h \
     System/command.h \
+    System/binarymanager.h \
+    System/cpuconsts.h \
+    System/lexer.h \
+    System/lexeme.h \
+    System/highlighter.h \
     Devices/alu.h \
     Devices/ram.h \
     Devices/controlunit.h \
@@ -66,10 +70,6 @@ HEADERS += \
     Widgets/regsWidget.h \
     Widgets/ramWidget.h \
     Widgets/vmwidget.h \
-    System/cpuconsts.h \
-    System/lexer.h \
-    System/lexeme.h \
-    System/highlighter.h \
     Widgets/codearea.h \
     Widgets/linenumbersarea.h \
     Widgets/codeeditor.h

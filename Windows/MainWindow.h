@@ -14,7 +14,6 @@
 #include <QPlainTextEdit>
 
 #include "vmwidget.h"
-//#include "codeeditor_old.h"
 #include "codeeditor.h"
 
 class MainWindow : public QMainWindow

@@ -39,8 +39,6 @@ ControlUnit::ControlUnit(){
     prog = new RAM(PROG_SIZE);
     data = new RAM(DATA_SIZE);
 
-    curCom = nullptr;
-
     for(int i=0;i<8;i++)
         regs << Reg();
 
@@ -50,21 +48,18 @@ ControlUnit::ControlUnit(){
 ControlUnit::~ControlUnit(){
     delete prog;
     delete data;
-
-    if (curCom != nullptr)
-        delete curCom;
 }
 
-bool ControlUnit::Init(const QList<Command *> *inputProg)
+bool ControlUnit::Init(const QList<Command> *inputProg)
 {
     if(inputProg->size() <= prog->getMemSize())
     {
         quint16 memaddr = 0;
-        QList<Command*>::const_iterator it;
+        QList<Command>::const_iterator it;
         for(it = inputProg->begin(); it != inputProg->end(); ++it) {
-            quint32 word = static_cast<quint32>((*it)->getName()) << 27;
-            word += static_cast<quint32>((*it)->getOp1()) << 16;
-            word += static_cast<quint32>((*it)->getOp2());
+            quint32 word = static_cast<quint32>((*it).getName()) << 27;
+            word += static_cast<quint32>((*it).getOp1()) << 16;
+            word += static_cast<quint32>((*it).getOp2());
 
             prog->write(memaddr++,word);
         }
@@ -83,15 +78,9 @@ bool ControlUnit::Work(){
         quint16 op1 = (word >> 16) & 0x7FF;
         ComNames name = static_cast<ComNames> (word >> 27);
 
-        if (curCom != nullptr)
-        {
-            delete curCom;
-            curCom = nullptr;
-        }
+        curCom = Command(name,op1,op2);
 
-        curCom = new Command(name,op1,op2);
-
-        switch (curCom->getName()) {
+        switch (curCom.getName()) {
         case MOV1:
         case MOV2:
         case MOV3:
@@ -156,21 +145,21 @@ void ControlUnit::Reset()
 }
 
 void ControlUnit::movOp(){
-    switch (curCom->getName()) {
+    switch (curCom.getName()) {
     case MOV1:
-        regs[curCom->getOp1()].write(curCom->getOp2());
+        regs[curCom.getOp1()].write(curCom.getOp2());
         break;
     case MOV2:
-        data->write(curCom->getOp1(),curCom->getOp2());
+        data->write(curCom.getOp1(),curCom.getOp2());
         break;
     case MOV3:
-        regs[curCom->getOp1()].write(data->read( regs.at(curCom->getOp2()).read() ));
+        regs[curCom.getOp1()].write(data->read( regs.at(curCom.getOp2()).read() ));
         break;
     case MOV4:
-        data->write( regs.at(curCom->getOp1()).read(),regs.at(curCom->getOp2()).read() );
+        data->write( regs.at(curCom.getOp1()).read(),regs.at(curCom.getOp2()).read() );
         break;
     case MOV5:
-        regs[curCom->getOp1()].write(regs.at(curCom->getOp2()).read());
+        regs[curCom.getOp1()].write(regs.at(curCom.getOp2()).read());
         break;
     default:
         break;
@@ -179,16 +168,16 @@ void ControlUnit::movOp(){
 
 void ControlUnit::addOp(){
     quint32 a, b, result;
-    switch (curCom->getName()) {
+    switch (curCom.getName()) {
     case ADD1:
-        regs[0].write(alu.addOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read(), false));
+        regs[0].write(alu.addOp(regs.at(curCom.getOp1()).read(), regs.at(curCom.getOp2()).read(), false));
         break;
     case ADD2:
-        regs[0].write( alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2(), false) );
+        regs[0].write( alu.addOp(regs.at(curCom.getOp1()).read(), curCom.getOp2(), false) );
         break;
     case ADD3:
         a = (regs.at(0).read() << 16) | regs.at(1).read();
-        b = (regs.at(curCom->getOp1()).read() << 16) | regs.at(curCom->getOp2()).read();
+        b = (regs.at(curCom.getOp1()).read() << 16) | regs.at(curCom.getOp2()).read();
         result = alu.addOp( a, b, true);
         regs[0].write(result >> 16);
         regs[1].write(result & 0xFFFF);
@@ -199,12 +188,12 @@ void ControlUnit::addOp(){
 }
 
 void ControlUnit::subOp(){
-    switch (curCom->getName()) {
+    switch (curCom.getName()) {
     case SUB1:
-        regs[0].write(alu.subOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read()));
+        regs[0].write(alu.subOp(regs.at(curCom.getOp1()).read(), regs.at(curCom.getOp2()).read()));
         break;
     case SUB2:
-        regs[0].write( alu.subOp(regs.at(curCom->getOp1()).read(), curCom->getOp2()) );
+        regs[0].write( alu.subOp(regs.at(curCom.getOp1()).read(), curCom.getOp2()) );
         break;
     default:
         break;
@@ -213,18 +202,18 @@ void ControlUnit::subOp(){
 
 void ControlUnit::muxOp()
 {
-    quint32 result = alu.muxOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read());
+    quint32 result = alu.muxOp(regs.at(curCom.getOp1()).read(), regs.at(curCom.getOp2()).read());
     regs[0].write(result >> 16);
     regs[1].write(result & 0xFFFF);
 }
 
 void ControlUnit::andOp(){
-    switch (curCom->getName()) {
+    switch (curCom.getName()) {
     case AND1:
-        regs[0].write( alu.andOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read()) );
+        regs[0].write( alu.andOp(regs.at(curCom.getOp1()).read(), regs.at(curCom.getOp2()).read()) );
         break;
     case AND2:
-        regs[0].write( alu.andOp(regs.at(curCom->getOp1()).read(), curCom->getOp2()) );
+        regs[0].write( alu.andOp(regs.at(curCom.getOp1()).read(), curCom.getOp2()) );
         break;
     default:
         break;
@@ -232,13 +221,13 @@ void ControlUnit::andOp(){
 }
 
 void ControlUnit::orOp(){
-    switch (curCom->getName()) {
+    switch (curCom.getName()) {
     case OR1:
 
-        regs[curCom->getOp1()].write(alu.orOp(regs.at(0).read(),regs.at(curCom->getOp2()).read()));
+        regs[curCom.getOp1()].write(alu.orOp(regs.at(0).read(),regs.at(curCom.getOp2()).read()));
         break;
     case OR2:
-        regs[curCom->getOp1()].write(alu.orOp(regs.at(0).read(),curCom->getOp2()));
+        regs[curCom.getOp1()].write(alu.orOp(regs.at(0).read(),curCom.getOp2()));
         break;
     default:
         break;
@@ -246,21 +235,21 @@ void ControlUnit::orOp(){
 }
 
 void ControlUnit::jmpOp(){
-    switch (curCom->getName()) {
+    switch (curCom.getName()) {
     case JZ:
         if(flags & 4)
-            pc = curCom->getOp1() - 1;
+            pc = curCom.getOp1() - 1;
         break;
     case JN:
         if(flags & 1)
-            pc = curCom->getOp1() - 1;
+            pc = curCom.getOp1() - 1;
         break;
     case JP:
         if((flags & 5) == 0)
-            pc = curCom->getOp1() - 1;
+            pc = curCom.getOp1() - 1;
         break;
     case JMP:
-        pc = curCom->getOp1() - 1;
+        pc = curCom.getOp1() - 1;
         break;
     default:
         break;

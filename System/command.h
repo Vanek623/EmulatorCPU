@@ -42,18 +42,20 @@
 class Command
 {
 public:
+    Command();
+    Command(const ComNames com,const quint16 op1,const quint16 op2);
     ~Command();
 
-    Command(const ComNames com,const quint16 op1,const quint16 op2);
     ComNames getName() const;
     quint16 getOp1() const;
     quint16 getOp2() const;
     Command *getCommand();
-    QStringList *getCommandList() const;
+    //QStringList *getCommandList() const;
+
 private:
     ComNames name;
     quint16 op1, op2;
-    QStringList *commandList;
+    //QStringList *commandList;
 };
 
 #endif // COMMAND_H

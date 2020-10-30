@@ -30,7 +30,7 @@
 class ControlUnit
 {
 private:
-    Command *curCom;
+    Command curCom;
     RAM *prog;
     RAM *data;
     ALU alu;
@@ -44,7 +44,7 @@ public:
     ControlUnit();
     ~ControlUnit();
 
-    bool Init(const QList<Command*> *inputProg);
+    bool Init(const QList<Command> *inputProg);
     bool Work();
     void Reset();
 

@@ -7,12 +7,6 @@ Builder::Builder()
 
 Builder::~Builder()
 {
-    QList<Command*>::iterator it;
-    for (it = program->begin(); it != program->end(); ++it)
-    {
-        delete (*it);
-    }
-
     delete program;
 
     delete commandList;
@@ -44,7 +38,7 @@ int Builder::compile(const QString &rawProgTxt){
     return parse(lexemes);
 }
 
-QList<Command*> *Builder::getProgrammList() const
+QList<Command> *Builder::getProgrammList() const
 {
     return program;
 }
@@ -79,7 +73,7 @@ void Builder::setupCommandList()
 
 int Builder::parse(const QList<lexeme> *lexemes)
 {
-    program = new QList<Command*>();
+    program = new QList<Command>();
     QList<lexeme>::const_iterator it;
     int line = 0;
 
@@ -146,7 +140,7 @@ int Builder::parse(const QList<lexeme> *lexemes)
                 return line;
             }
 
-            program->append(new Command(curInfo.name, op1, op2));
+            program->append(Command(curInfo.name, op1, op2));
         }
         else if(lex.getType() != EMPTY) return line;
 

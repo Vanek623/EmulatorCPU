@@ -1,5 +1,4 @@
-#ifndef BUILDER_H
-#define BUILDER_H
+#pragma once
 
 #include "command.h"
 #include <QList>
@@ -14,7 +13,7 @@
 class Builder
 {
 private:
-    QList<Command*> *program;
+    QList<Command> *program;
     QMap<QString, COMINFO> *commandList;
     QMap<QString, quint16> *marks;
 
@@ -22,7 +21,7 @@ public:
     Builder();
     ~Builder();
     int compile(const QString &rawProgTxt);
-    QList<Command*> *getProgrammList() const;
+    QList<Command> *getProgrammList() const;
 
 signals:
     void sendResultMsg(const QString &msg);
@@ -32,5 +31,3 @@ private:
     int parse(const QList<lexeme> *lexemes);
     COMINFO getInfo(const QString &word,const QList<int> &shifts) const;
 };
-
-#endif // BUILDER_H
