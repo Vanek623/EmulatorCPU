@@ -55,18 +55,14 @@ ControlUnit::~ControlUnit(){
         delete curCom;
 }
 
-bool ControlUnit::Init(const QList<Command *> *inputProg)
+bool ControlUnit::Init(const QList<quint32> inputProg)
 {
-    if(inputProg->size() <= prog->getMemSize())
+    if(inputProg.size() <= prog->getMemSize())
     {
         quint16 memaddr = 0;
-        QList<Command*>::const_iterator it;
-        for(it = inputProg->begin(); it != inputProg->end(); ++it) {
-            quint32 word = static_cast<quint32>((*it)->getName()) << 27;
-            word += static_cast<quint32>((*it)->getOp1()) << 16;
-            word += static_cast<quint32>((*it)->getOp2());
-
-            prog->write(memaddr++,word);
+        QList<quint32>::const_iterator it;
+        for(it = inputProg.begin(); it != inputProg.end(); ++it) {
+            prog->write(memaddr++, *it);
         }
 
         pc = 0;
@@ -164,7 +160,7 @@ void ControlUnit::movOp(){
         data->write(curCom->getOp1(),curCom->getOp2());
         break;
     case MOV3:
-        regs[curCom->getOp1()].write(data->read( regs.at(curCom->getOp2()).read() ));
+        regs[curCom->getOp1()].write(static_cast<quint16>(data->read( regs.at(curCom->getOp2()).read() )));
         break;
     case MOV4:
         data->write( regs.at(curCom->getOp1()).read(),regs.at(curCom->getOp2()).read() );
@@ -181,17 +177,19 @@ void ControlUnit::addOp(){
     quint32 a, b, result;
     switch (curCom->getName()) {
     case ADD1:
-        regs[0].write(alu.addOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read(), false));
+        regs[0].write( static_cast<quint16>(alu.addOp(regs.at(curCom->getOp1()).read(), regs.at(curCom->getOp2()).read(), false)));
         break;
     case ADD2:
-        regs[0].write( alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2(), false) );
+        regs[0].write( static_cast<quint16>(alu.addOp(regs.at(curCom->getOp1()).read(), curCom->getOp2(), false)) );
         break;
     case ADD3:
-        a = (regs.at(0).read() << 16) | regs.at(1).read();
-        b = (regs.at(curCom->getOp1()).read() << 16) | regs.at(curCom->getOp2()).read();
+    {
+        a = static_cast<quint32>(regs.at(0).read()) << 16 | regs.at(1).read();
+        b = static_cast<quint32>(regs.at(curCom->getOp1()).read()) << 16 | regs.at(curCom->getOp2()).read();
         result = alu.addOp( a, b, true);
         regs[0].write(result >> 16);
         regs[1].write(result & 0xFFFF);
+    }
         break;
     default:
         break;

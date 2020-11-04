@@ -23,7 +23,7 @@ void VMWidget::compileProg(const QString &progTxt){
         Builder builder;
         int compileResult = builder.compile(progTxt);
         if(compileResult == -1){
-            if(!cpu->Init(builder.getProgrammList()))
+            if(!cpu->Init(BinaryManager::loadBinary()))
             {
                 QString compileResultStr = "Размер программы слишком большой!";
                 QMessageBox::warning(this, "Ошибка", compileResultStr);
@@ -36,7 +36,6 @@ void VMWidget::compileProg(const QString &progTxt){
             }
 
             progRam->updateContent(cpu->getProg());
-            //qDebug() << "OK";
         }
         else
         {

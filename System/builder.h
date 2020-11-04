@@ -7,14 +7,16 @@
 #include <QMap>
 #include <QRegExp>
 #include <QDebug>
+
 #include "comnames.h"
 #include "cominfo.h"
 #include "lexer.h"
+#include "binarymanager.h"
 
 class Builder
 {
 private:
-    QList<Command*> *program;
+    QList<Command> *program;
     QMap<QString, COMINFO> *commandList;
     QMap<QString, quint16> *marks;
 
@@ -22,7 +24,7 @@ public:
     Builder();
     ~Builder();
     int compile(const QString &rawProgTxt);
-    QList<Command*> *getProgrammList() const;
+    QList<Command> *getProgrammList() const;
 
 signals:
     void sendResultMsg(const QString &msg);

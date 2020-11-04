@@ -28,7 +28,8 @@ INCLUDEPATH += \
     ./Windows/ \
     ./Enums/ \
     ./Programms/ \
-    ./System/
+    ./System/ \
+    ./Binary/
 
 SOURCES += \
         main.cpp \
@@ -47,7 +48,8 @@ SOURCES += \
     System/highlighter.cpp \
     Widgets/codearea.cpp \
     Widgets/linenumbersarea.cpp \
-    Widgets/codeeditor.cpp
+    Widgets/codeeditor.cpp \
+    System/binarymanager.cpp
 
 
 
@@ -72,8 +74,10 @@ HEADERS += \
     System/highlighter.h \
     Widgets/codearea.h \
     Widgets/linenumbersarea.h \
-    Widgets/codeeditor.h
+    Widgets/codeeditor.h \
+    System/binarymanager.h
 
 OTHER_FILES += \
     Programms/ArrSumProg.txt \
-    Programms/ArrSumMuxProg.txt
+    Programms/ArrSumMuxProg.txt \
+    Binary/prog.txt

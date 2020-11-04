@@ -1,7 +1,6 @@
 #include "command.h"
 
 Command::~Command(){
-    delete commandList;
 }
 
 Command::Command(const ComNames com, const quint16 op1, const quint16 op2)
@@ -11,6 +10,7 @@ Command::Command(const ComNames com, const quint16 op1, const quint16 op2)
 
     name = com;
 
+    /*
     commandList = new QStringList();
     commandList->append( "MOV1 @R, OP");
     commandList->append( "MOV2 @M, OP");
@@ -35,11 +35,7 @@ Command::Command(const ComNames com, const quint16 op1, const quint16 op2)
     commandList->append( "JN L, X");
     commandList->append( "JMP L, X");
     commandList->append( "NOP X, X");
-}
-
-QStringList *Command::getCommandList() const
-{
-    return commandList;
+    */
 }
 
 ComNames Command::getName() const{

@@ -44,7 +44,7 @@ public:
     ControlUnit();
     ~ControlUnit();
 
-    bool Init(const QList<Command*> *inputProg);
+    bool Init(const QList<quint32> inputProg);
     bool Work();
     void Reset();
 

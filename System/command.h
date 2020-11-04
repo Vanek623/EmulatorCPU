@@ -49,11 +49,9 @@ public:
     quint16 getOp1() const;
     quint16 getOp2() const;
     Command *getCommand();
-    QStringList *getCommandList() const;
 private:
     ComNames name;
     quint16 op1, op2;
-    QStringList *commandList;
 };
 
 #endif // COMMAND_H
